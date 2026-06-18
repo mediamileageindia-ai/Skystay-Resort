@@ -5,7 +5,7 @@ backend/node_modules/
 
 # Build outputs
 dist/
-frontend/dist/
+# frontend/dist/ — kept for Hostinger deploy
 backend/dist/
 
 # Environment files
