@@ -13,7 +13,7 @@ const SECTIONS = [
   {
     title: '2. Check-In & Check-Out',
     points: [
-      'Standard check-in time is 2:00 PM and check-out time is 11:00 AM.',
+      'Standard check-in time is 1:00 PM and check-out time is 11:00 AM.',
       'Early check-in and late check-out are subject to availability and may incur additional charges.',
       'Guests are requested to carry a valid ID proof at the time of check-in.',
     ],
@@ -30,7 +30,7 @@ const SECTIONS = [
   {
     title: '4. Payment Terms',
     points: [
-      'A minimum advance of 30% of the total booking amount is required to confirm the reservation.',
+      'A minimum advance of 50% of the total booking amount is required to confirm the reservation.',
       'Full payment must be completed at or before check-in.',
       'Accepted payment methods include cash, UPI, credit/debit cards, and bank transfer.',
     ],
