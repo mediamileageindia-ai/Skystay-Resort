@@ -236,7 +236,7 @@ function ViewPointCard({ vp, i }: { vp: typeof VIEWPOINTS[0], i: number }) {
 const amenities = [
   { icon: Flame,     label: 'Fire Camp',            desc: 'Starlit bonfire evenings with music & stories',       img: '/gallery-bonfire.jpg',        link: '/resort-activities'  },
   { icon: Baby,      label: "Children's Play Area", desc: 'Safe, secure & fun-filled zone for kids',             img: '/gallery-kids-play.jpg',      link: '/resort-activities'  },
-  { icon: Car,       label: 'Jeep Safari',          desc: 'Guided off-road adventure through scenic landscapes', img: '/place-ladys-seat.jpg',       link: '/resort-activities'  },
+  { icon: Car,       label: 'Jeep Safari',          desc: 'Guided off-road adventure through scenic landscapes', img: '/gallery-jeep-safari.jpg',    link: '/resort-activities'  },
   { icon: Wifi,      label: 'High-Speed WiFi',      desc: 'Stay connected with high-speed internet',             img: '/gallery-room-1.jpg',         link: '/amenities'          },
   { icon: Utensils,  label: 'Restaurant',           desc: 'Multi-cuisine dining & room service',                 img: '/gallery-dining-1.jpg',       link: '/amenities'          },
   { icon: Building2, label: 'Meeting Hall',         desc: 'Perfect space for events, meetings & celebrations',  img: '/gallery-meeting-hall.jpg',   link: '/facilities'         },
@@ -273,7 +273,7 @@ const GUEST_STORIES = [
   { name:'Suresh Pillai', city:'Trivandrum', room:'Premium Villa Type 1BH', video:'/Video/V8.mp4', poster:'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=600&q=70', rating:5, date:'02 Feb 2025', comment:'Exceptional service and stunning views. Every staff member made us feel like royalty throughout the stay.' },
 ]
 
-// ---- STORY CARD (needs own play state) ----
+// ---- STORY CARD ----
 function StoryCard({ s, i }: { s: typeof GUEST_STORIES[0]; i: number }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(false)
@@ -792,9 +792,8 @@ function LifeAtSkyStay() {
 }
 
 export default function HomePage() {
-  const { data: offersData }  = useQuery({ queryKey:['offers'], queryFn:() => offersService.getAll().then(r=>r.data), placeholderData:{ data: OFFERS } })
+  useQuery({ queryKey:['offers'], queryFn:() => offersService.getAll().then(r=>r.data), placeholderData:{ data: OFFERS } })
   const { data: googleData }  = useQuery({ queryKey:['google-reviews'], queryFn:() => googleReviewsService.getAll(), staleTime: 3600000 })
-  const offers  = offersData?.data  || OFFERS
   const googleRevs      = googleData?.reviews ?? []
   const overallRating   = googleData?.overallRating ?? 4.9
   const totalRatings    = googleData?.totalRatings ?? null
