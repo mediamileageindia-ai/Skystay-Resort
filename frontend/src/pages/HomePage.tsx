@@ -237,7 +237,7 @@ const amenities = [
   { icon: Flame,     label: 'Fire Camp',            desc: 'Starlit bonfire evenings with music & stories',       img: '/gallery-bonfire.jpg',        link: '/resort-activities'  },
   { icon: Baby,      label: "Children's Play Area", desc: 'Safe, secure & fun-filled zone for kids',             img: '/gallery-kids-play.jpg',      link: '/resort-activities'  },
   { icon: Car,       label: 'Jeep Safari',          desc: 'Guided off-road adventure through scenic landscapes', img: '/gallery-jeep-safari.jpg',    link: '/resort-activities'  },
-  { icon: Wifi,      label: 'High-Speed WiFi',      desc: 'Stay connected with high-speed internet',             img: '/gallery-room-1.jpg',         link: '/amenities'          },
+  { icon: Wifi,      label: 'High-Speed WiFi',      desc: 'Stay connected with high-speed internet',             img: '/gallery-wifi-room.webp',     link: '/amenities'          },
   { icon: Utensils,  label: 'Restaurant',           desc: 'Multi-cuisine dining & room service',                 img: '/gallery-dining-1.jpg',       link: '/amenities'          },
   { icon: Building2, label: 'Meeting Hall',         desc: 'Perfect space for events, meetings & celebrations',  img: '/gallery-meeting-hall.jpg',   link: '/facilities'         },
   { icon: Trees,     label: 'Nature Trails',        desc: '3 km curated walk surrounded by nature',             img: '/place-botanical-garden.jpg', link: '/places-to-visit'    },
