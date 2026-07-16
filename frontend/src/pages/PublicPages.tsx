@@ -746,22 +746,6 @@ const FACILITY_GROUPS = [
     ],
   },
   {
-    category: 'Experiences',
-    items: [
-      { name: 'Bonfire Evening', timing: '6 PM to 9 PM', image: 'https://images.unsplash.com/photo-1510672981848-a1c4f1cb5ccf?w=600&q=80' },
-      { name: 'Family Fire Camp', timing: '6 PM to 9 PM', image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80' },
-      { name: 'Fire Camp Night', timing: '7 PM to 10 PM', image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80' },
-    ],
-  },
-  {
-    category: 'Celebrations',
-    items: [
-      { name: 'Birthday Celebration', timing: 'By Booking', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80' },
-      { name: 'Anniversary Celebration', timing: 'By Booking', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600&q=80' },
-      { name: 'Honeymoon Decoration', timing: 'By Booking', image: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&q=80' },
-    ],
-  },
-  {
     category: 'Corporate Events',
     items: [
       { name: 'Conference Hall', timing: '8 AM to 8 PM', image: '/gallery-hall-1.jpg' },
