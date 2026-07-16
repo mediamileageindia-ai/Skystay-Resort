@@ -1,0 +1,15 @@
+{
+  "buildCommand": "npx vite build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "rewrites": [{ "source": "/((?!api).*)", "destination": "/index.html" }],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Referrer-Policy", "value": "no-referrer-when-downgrade" },
+        { "key": "Cross-Origin-Embedder-Policy", "value": "unsafe-none" }
+      ]
+    }
+  ]
+}

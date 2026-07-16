@@ -1,4 +1,4 @@
-// ============================================
+﻿// ============================================
 // PORTAL LAYOUT
 // ============================================
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
@@ -81,8 +81,8 @@ export function PortalLayout() {
 // ============================================
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
-import { bookingsService, paymentsService } from '@/services/api'
-import { Booking, BookingStatus } from '@/types'
+import { bookingsService } from '@/services/api'
+import { BookingStatus } from '@/types'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { Link } from 'react-router-dom'
@@ -106,29 +106,129 @@ const ROOM_NAMES: Record<string, string> = {
   '4':'Forest Retreat Cottage','5':'Horizon Penthouse','6':'Romance Suite',
 }
 
+function ReviewModal({ booking, onClose }: { booking: any; onClose: () => void }) {
+  const { user } = useAuthStore()
+  const [rating, setRating] = useState(5)
+  const [hover, setHover]   = useState(0)
+  const [comment, setComment] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!comment.trim()) { toast.error('Please write a comment.'); return }
+    setSubmitting(true)
+    try {
+      const { supabase } = await import('@/lib/supabase')
+      const { error } = await supabase.from('reviews').insert({
+        name:    user?.name  ?? 'Guest',
+        city:    '',
+        rating,
+        comment: comment.trim(),
+        room_id: booking.roomId ?? null,
+      })
+      if (error) throw error
+      toast.success('Review submitted — thank you!')
+      onClose()
+    } catch {
+      toast.error('Failed to submit review. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+      <div className="bg-white rounded-sm shadow-2xl w-full max-w-md p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-base font-medium text-navy-700">Write a Review</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">×</button>
+        </div>
+        <p className="text-xs text-gray-500 mb-4">{ROOM_NAMES[booking.roomId] || 'Sky Stay Room'}</p>
+
+        {/* Star Rating */}
+        <div className="flex gap-1 mb-5">
+          {[1,2,3,4,5].map(s => (
+            <button key={s} type="button"
+              onClick={() => setRating(s)}
+              onMouseEnter={() => setHover(s)}
+              onMouseLeave={() => setHover(0)}
+            >
+              <Star size={28} className={`transition-colors ${s <= (hover || rating) ? 'text-gold-400 fill-gold-400' : 'text-gray-300'}`} />
+            </button>
+          ))}
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <textarea
+            value={comment}
+            onChange={e => setComment(e.target.value)}
+            placeholder="Share your experience..."
+            rows={4}
+            className="w-full px-3 py-2.5 border border-gray-200 rounded-sm text-sm text-navy-700 resize-none focus:outline-none focus:border-gold-400"
+          />
+          <div className="flex gap-2 mt-4">
+            <button type="button" onClick={onClose}
+              className="flex-1 px-4 py-2 border border-gray-200 text-xs text-gray-600 rounded-sm hover:bg-gray-50">
+              Cancel
+            </button>
+            <button type="submit" disabled={submitting}
+              className="flex-1 px-4 py-2 bg-gold-400 hover:bg-gold-300 disabled:opacity-50 text-navy-800 text-xs font-medium rounded-sm transition-colors">
+              {submitting ? 'Submitting...' : 'Submit Review'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 export function MyBookingsPage() {
-  const queryClient = useQueryClient()
   const { data } = useQuery({
     queryKey: ['my-bookings'],
     queryFn: () => bookingsService.getMyBookings().then(r => r.data),
     placeholderData: { data: MY_BOOKINGS_FALLBACK },
   })
-  const bookings = data?.data || MY_BOOKINGS_FALLBACK
+  const [localBookings, setLocalBookings] = useState<any[]>([])
+  const [reviewBooking, setReviewBooking] = useState<any>(null)
+  const bookings = localBookings.length > 0 ? localBookings : (data?.data || MY_BOOKINGS_FALLBACK)
 
-  const cancelMutation = useMutation({
-    mutationFn: (id: string) => bookingsService.cancel(id),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey:['my-bookings'] }); toast.success('Booking cancelled.') },
-  })
+  const handleCancel = (id: string) => {
+    const list = bookings.length > 0 ? bookings : MY_BOOKINGS_FALLBACK
+    setLocalBookings(list.map((b: any) => b.id === id ? { ...b, status: 'cancelled' } : b))
+    toast.success('Booking cancelled successfully.')
+  }
 
-  const downloadInvoice = async (bookingId: string) => {
+  const downloadInvoice = async (b: any) => {
     try {
-      await paymentsService.getInvoice(bookingId)
+      const checkIn  = new Date(b.checkIn)
+      const checkOut = new Date(b.checkOut)
+      const nights   = Math.max(1, Math.round((checkOut.getTime() - checkIn.getTime()) / 86400000))
+      const roomName = ROOM_NAMES[b.roomId] || b.room?.roomName || 'Sky Stay Room'
+      const { generateInvoice } = await import('@/lib/generateInvoice')
+      generateInvoice({
+        bookingNumber: b.bookingNumber ?? b.id?.slice(0,8).toUpperCase() ?? 'SKY-0001',
+        guestName:     b.guestSnapshot?.name ?? b.user?.name ?? 'Valued Guest',
+        guestEmail:    b.guestSnapshot?.email ?? b.user?.email ?? '',
+        guestPhone:    b.guestSnapshot?.phone ?? b.user?.phone ?? '',
+        roomName,
+        checkIn:       b.checkIn,
+        checkOut:      b.checkOut,
+        nights,
+        pricePerNight: b.room?.price ?? Math.round((b.totalAmount / 1.12) / nights),
+        totalAmount:   b.totalAmount,
+        status:        b.status,
+        createdAt:     b.createdAt ?? new Date().toISOString(),
+      })
       toast.success('Invoice downloaded!')
-    } catch { toast.error('Invoice not available yet.') }
+    } catch (err) {
+      console.error('Invoice error:', err)
+      toast.error('Failed to generate invoice.')
+    }
   }
 
   return (
     <div>
+      {reviewBooking && <ReviewModal booking={reviewBooking} onClose={() => setReviewBooking(null)} />}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-medium text-navy-700">My Bookings</h1>
       </div>
@@ -137,7 +237,7 @@ export function MyBookingsPage() {
         <div className="bg-white border border-gray-200 rounded-sm p-16 text-center">
           <CalendarDays size={40} className="text-gray-300 mx-auto mb-4" />
           <p className="text-gray-500 mb-4">No bookings yet</p>
-          <a href="https://wa.me/919876543210" className="text-gold-500 text-sm hover:text-gold-600">Contact us to book →</a>
+          <a href="https://wa.me/919003010567" className="text-gold-500 text-sm hover:text-gold-600">Contact us to book →</a>
         </div>
       ) : (
         <div className="space-y-4">
@@ -170,18 +270,18 @@ export function MyBookingsPage() {
                   </div>
                 </div>
                 <div className="flex gap-2 flex-wrap">
-                  <button onClick={() => downloadInvoice(b.id)}
+                  <button onClick={() => downloadInvoice(b)}
                     className="text-xs px-3 py-1.5 border border-gray-200 rounded-sm text-gray-600 hover:border-gold-400 hover:text-gold-500 transition-colors flex items-center gap-1">
                     <FileText size={12} /> Invoice
                   </button>
                   {b.status === 'confirmed' && (
-                    <button onClick={() => cancelMutation.mutate(b.id)}
+                    <button onClick={() => handleCancel(b.id)}
                       className="text-xs px-3 py-1.5 border border-red-200 rounded-sm text-red-500 hover:bg-red-50 transition-colors">
                       Cancel Booking
                     </button>
                   )}
                   {b.status === 'checked_out' && (
-                    <button onClick={() => toast.success('Review submitted — thank you!')}
+                    <button onClick={() => setReviewBooking(b)}
                       className="text-xs px-3 py-1.5 border border-gold-400 rounded-sm text-gold-500 hover:bg-gold-50 transition-colors flex items-center gap-1">
                       <Star size={12} /> Write Review
                     </button>
@@ -262,11 +362,36 @@ export function MyProfilePage() {
 // INVOICES PAGE
 // ============================================
 export function InvoicesPage() {
+  const { user } = useAuthStore()
   const invoices = [
-    { id:'1', bookingNumber:'SKY-2025-0042', date:'10 Dec 2025', amount:5599,  status:'paid' },
-    { id:'2', bookingNumber:'SKY-2025-0031', date:'20 Oct 2025', amount:8959,  status:'paid' },
-    { id:'3', bookingNumber:'SKY-2025-0018', date:'01 Sep 2025', amount:11199, status:'paid' },
+    { id:'1', bookingNumber:'SKY-2025-0042', roomName:'Deluxe Garden Room',   checkIn:'2025-12-20', checkOut:'2025-12-22', nights:2, pricePerNight:2499, amount:5599,  date:'10 Dec 2025', status:'confirmed' },
+    { id:'2', bookingNumber:'SKY-2025-0031', roomName:'Premium Valley Suite', checkIn:'2025-11-05', checkOut:'2025-11-07', nights:2, pricePerNight:3999, amount:8959,  date:'20 Oct 2025', status:'checked_out' },
+    { id:'3', bookingNumber:'SKY-2025-0018', roomName:'Romance Suite',        checkIn:'2025-09-14', checkOut:'2025-09-16', nights:2, pricePerNight:4999, amount:11199, date:'01 Sep 2025', status:'checked_out' },
   ]
+
+  const downloadInv = async (inv: typeof invoices[0]) => {
+    try {
+      const { generateInvoice } = await import('@/lib/generateInvoice')
+      generateInvoice({
+        bookingNumber: inv.bookingNumber,
+        guestName:     user?.name  ?? 'Valued Guest',
+        guestEmail:    user?.email ?? '',
+        guestPhone:    user?.phone ?? '',
+        roomName:      inv.roomName,
+        checkIn:       inv.checkIn,
+        checkOut:      inv.checkOut,
+        nights:        inv.nights,
+        pricePerNight: inv.pricePerNight,
+        totalAmount:   inv.amount,
+        status:        inv.status,
+        createdAt:     new Date(inv.date).toISOString(),
+      })
+      toast.success('Invoice downloaded!')
+    } catch (err) {
+      console.error(err)
+      toast.error('Failed to generate invoice.')
+    }
+  }
 
   return (
     <div>
@@ -292,7 +417,7 @@ export function InvoicesPage() {
                   <span className="text-[10px] bg-green-50 text-green-800 px-2 py-0.5 rounded-full font-medium">PAID</span>
                 </td>
                 <td className="px-5 py-3">
-                  <button onClick={() => toast.success('Invoice downloaded!')}
+                  <button onClick={() => downloadInv(inv)}
                     className="text-xs text-gold-500 border border-gold-400/40 px-3 py-1 rounded-sm hover:bg-gold-50 transition-colors flex items-center gap-1">
                     <FileText size={11} /> Download PDF
                   </button>
@@ -310,7 +435,6 @@ export function InvoicesPage() {
 // NOTIFICATIONS PAGE
 // ============================================
 import { notificationsService } from '@/services/api'
-import { Notification } from '@/types'
 
 const NOTIFS_FALLBACK = [
   { id:'1', type:'booking_confirmed', title:'Booking Confirmed — SKY-2025-0042', message:'Your Deluxe Garden Room is confirmed for Dec 20–22. Check-in at 2:00 PM.', isRead:false, sentAt:'2025-12-10T10:30:00Z' },
@@ -374,7 +498,7 @@ export function NotificationsPage() {
 // ============================================
 export function WishlistPage() {
   const [wishlist, setWishlist] = useState([
-    { id:'3', name:'Luxury Pool Villa', price:15999, img:'https://images.unsplash.com/photo-1602343168117-bb8ced3e3204?w=400&q=80', slug:'luxury-pool-villa' },
+    { id:'3', name:'Luxury Pool Villa', price:15999, img:'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400&q=80', slug:'luxury-pool-villa' },
     { id:'5', name:'Horizon Penthouse', price:22999, img:'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&q=80', slug:'horizon-penthouse' },
   ])
 

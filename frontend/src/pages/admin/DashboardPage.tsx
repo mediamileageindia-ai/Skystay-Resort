@@ -1,8 +1,43 @@
 import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
-import { TrendingUp, CalendarCheck, Percent, UserPlus, ArrowUpRight, Clock } from 'lucide-react'
-import { adminService, bookingsService } from '@/services/api'
+import { TrendingUp, CalendarCheck, Percent, ArrowUpRight, Clock, UserPlus } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import { Link } from 'react-router-dom'
 import { DashboardStats, Booking } from '@/types'
+import { adminService, bookingsService } from '@/services/api'
+
+async function fetchDashboardStats() {
+  const [bookingsRes, contactsRes] = await Promise.all([
+    supabase.from('bookings').select('*'),
+    supabase.from('contacts').select('id, created_at'),
+  ])
+  const bookings = bookingsRes.data ?? []
+  const contacts = contactsRes.data ?? []
+  const today = new Date().toISOString().split('T')[0]
+
+  const totalRevenue  = bookings.filter(b => b.status !== 'cancelled').reduce((s, b) => s + Number(b.total_amount), 0)
+  const bookingsToday = bookings.filter(b => b.created_at?.startsWith(today)).length
+  const confirmed     = bookings.filter(b => b.status === 'confirmed').length
+  const pending       = bookings.filter(b => b.status === 'pending').length
+  const checkedIn     = bookings.filter(b => b.status === 'checked_in').length
+  const newContacts   = contacts.filter(c => c.created_at?.startsWith(today)).length
+  const totalRooms    = 6
+  const occupancy     = Math.round((checkedIn / totalRooms) * 100)
+
+  // Monthly revenue (last 6 months)
+  const months = Array.from({ length: 6 }, (_, idx) => {
+    const d = new Date(); d.setMonth(d.getMonth() - (5 - idx))
+    return { key: d.toISOString().slice(0, 7), month: d.toLocaleString('en', { month: 'short' }) }
+  })
+  const monthlyRevenue = months.map(m => ({
+    month:   m.month,
+    revenue: bookings
+      .filter(b => b.status !== 'cancelled' && b.created_at?.startsWith(m.key))
+      .reduce((s, b) => s + Number(b.total_amount), 0),
+  }))
+
+  return { totalRevenue, bookingsToday, confirmed, pending, checkedIn, newContacts, occupancy, monthlyRevenue, bookings }
+}
 
 // ---- Stat Card ----
 function StatCard({

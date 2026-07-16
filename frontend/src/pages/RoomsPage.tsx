@@ -1,66 +1,132 @@
-import { useState } from 'react'
+import { useState } from 'react' // used in RoomRow
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { useQuery } from '@tanstack/react-query'
-import { ChevronRight, Star, Users, Filter } from 'lucide-react'
-import { roomsService } from '@/services/api'
-
-const ROOM_TYPES = ['all','deluxe','suite','villa','cottage','penthouse','romance']
+import { ChevronLeft, ChevronRight, Wifi, BedDouble, Users, Maximize2 } from 'lucide-react'
 
 const ROOMS = [
-  { id:'1', slug:'deluxe-garden-room',     roomName:'Deluxe Garden Room',     roomType:'deluxe',    price:4999,  maxGuests:2, description:'Wake up to lush garden views. Premium handcrafted furniture, en-suite bathroom with rain shower, and a private balcony.', amenities:['Free WiFi','AC','Smart TV','Minibar','Safe','Hot water','Garden balcony'], images:[{url:'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80'}] },
-  { id:'2', slug:'premium-valley-suite',   roomName:'Premium Valley Suite',   roomType:'suite',     price:7999,  maxGuests:2, description:'Sweeping valley panoramas from your private balcony. Separate living area, jacuzzi, and premium in-room dining service.', amenities:['Free WiFi','AC','Jacuzzi','Lounge area','Smart TV','Minibar','Valley view'], images:[{url:'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80'}] },
-  { id:'3', slug:'luxury-pool-villa',      roomName:'Luxury Pool Villa',      roomType:'villa',     price:15999, maxGuests:4, description:'Your own private plunge pool, outdoor dining cabana, and dedicated butler service. The pinnacle of resort luxury.', amenities:['Private pool','Butler service','Outdoor dining','Free WiFi','AC','Full kitchen'], images:[{url:'https://images.unsplash.com/photo-1602343168117-bb8ced3e3204?w=600&q=80'}] },
-  { id:'4', slug:'forest-retreat-cottage', roomName:'Forest Retreat Cottage', roomType:'cottage',   price:6499,  maxGuests:2, description:'Rustic luxury nestled in the forest. Wood-finished interiors, outdoor shower, hammock, and private bonfire pit.', amenities:['Free WiFi','AC','Outdoor shower','Bonfire pit','Forest view','Hammock'], images:[{url:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80'}] },
-  { id:'5', slug:'horizon-penthouse',      roomName:'Horizon Penthouse',      roomType:'penthouse', price:22999, maxGuests:6, description:'Rooftop penthouse with 360° views, private terrace, chef service on request, and premium entertainment system.', amenities:['360° views','Private terrace','Chef service','Free WiFi','AC','6 guests'], images:[{url:'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80'}] },
-  { id:'6', slug:'romance-suite',          roomName:'Romance Suite',          roomType:'romance',   price:9999,  maxGuests:2, description:'Designed for couples. Floral decor, rose petal bath, candle-lit dinner setup, private terrace, and champagne on arrival.', amenities:['Rose bath','Champagne','Private terrace','Couple spa','Free WiFi','AC'], images:[{url:'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=600&q=80'}] },
+  {
+    id: '1', slug: 'deluxe-garden-room', roomName: 'Premium Villa Type 1BH',
+    roomType: 'deluxe', price: 4999, maxGuests: 2, size: '280 sq. ft.', bedType: 'Queen Size Bed',
+    description: 'Wake up to lush garden views from your private balcony. Handcrafted premium furniture, en-suite bathroom with rain shower, and a serene outdoor seating nook make this room the perfect retreat for couples seeking comfort amidst nature.',
+    images: ['/gallery-room-3.jpg', '/gallery-room-4.jpg'],
+  },
+  {
+    id: '2', slug: 'premium-valley-suite', roomName: 'Premium Villa Type 1BH',
+    roomType: 'suite', price: 7999, maxGuests: 2, size: '420 sq. ft.', bedType: 'King Size Bed',
+    description: 'Sweeping valley panoramas greet you from your private balcony. The suite features a separate living area, jacuzzi bathtub, and premium in-room dining service — an indulgent stay for those who appreciate the finer details.',
+    images: ['/gallery-room-1.jpg', '/gallery-room-2.jpg'],
+  },
+  {
+    id: '3', slug: 'luxury-pool-villa', roomName: 'Premium Villa Type 1BH',
+    roomType: 'villa', price: 15999, maxGuests: 4, size: '800 sq. ft.', bedType: 'King Size Bed',
+    description: 'Your own private plunge pool, outdoor dining cabana, and a dedicated butler service. Designed for those who seek the pinnacle of resort luxury, the villa immerses you in nature while surrounding you with world-class comfort.',
+    images: ['/gallery-room-7.jpg', '/gallery-room-8.jpg'],
+  },
+  {
+    id: '4', slug: 'forest-retreat-cottage', roomName: 'Premium Villa Type 1BH',
+    roomType: 'cottage', price: 6499, maxGuests: 2, size: '320 sq. ft.', bedType: 'Queen Size Bed',
+    description: 'Rustic luxury nestled deep in the forest. Wood-finished interiors, an outdoor rain shower, hammock under the canopy, and a private bonfire pit offer an authentic hill retreat experience unlike any other.',
+    images: ['/gallery-room-5.jpg', '/gallery-room-6.jpg'],
+  },
+  {
+    id: '5', slug: 'horizon-penthouse', roomName: 'Premium Villa Type 1BH',
+    roomType: 'penthouse', price: 22999, maxGuests: 6, size: '1200 sq. ft.', bedType: 'King Size Bed',
+    description: 'A rooftop penthouse with 360° panoramic views of the Yercaud hills. Features a private terrace, chef-on-call service, and a premium entertainment system — ideal for families or groups seeking an unforgettable hilltop experience.',
+    images: ['/gallery-room-4.jpg', '/gallery-room-3.jpg'],
+  },
+  {
+    id: '6', slug: 'romance-suite', roomName: 'Premium Villa Type 1BH',
+    roomType: 'romance', price: 9999, maxGuests: 2, size: '380 sq. ft.', bedType: 'King Size Bed',
+    description: 'Crafted for couples in love. Arrive to a champagne welcome, rose petal bath, and candle-lit dinner setup. The private terrace with valley views makes every evening magical — the perfect stay for anniversaries and honeymoons.',
+    images: ['/gallery-room-7.jpg', '/gallery-room-1.jpg'],
+  },
 ]
 
-function RoomCard({ room, index }: { room: typeof ROOMS[0]; index: number }) {
+
+const GUEST_WORDS: Record<number, string> = { 2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five', 6: 'Six' }
+
+function RoomRow({ room, index }: { room: typeof ROOMS[0]; index: number }) {
+  const [imgIdx, setImgIdx] = useState(0)
+  const isEven = index % 2 === 0
+  const total = room.images.length
+  const prev = () => setImgIdx(i => (i - 1 + total) % total)
+  const next = () => setImgIdx(i => (i + 1) % total)
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.07 }}
-      className="bg-white border border-gray-200 rounded-sm overflow-hidden group hover:shadow-lg transition-shadow"
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.55 }}
+      className="grid lg:grid-cols-2 items-center gap-10 lg:gap-16 py-14 border-b border-gray-100 last:border-0"
     >
-      <div className="relative h-56 overflow-hidden">
-        <img
-          src={room.images[0]?.url}
-          alt={room.roomName}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-        <div className="absolute top-3 left-3 bg-navy-700/90 text-gold-400 text-[10px] tracking-[1px] px-2.5 py-1 rounded-sm capitalize">
-          {room.roomType}
-        </div>
-      </div>
-      <div className="p-6">
-        <h3 className="font-medium text-navy-700 text-lg mb-1">{room.roomName}</h3>
-        <p className="text-sm text-gray-500 leading-relaxed mb-4 line-clamp-2">{room.description}</p>
-        <div className="flex flex-wrap gap-1.5 mb-4">
-          {room.amenities.slice(0, 4).map(a => (
-            <span key={a} className="text-[10px] bg-cream-100 text-navy-700 px-2 py-0.5 rounded-sm">{a}</span>
-          ))}
-          {room.amenities.length > 4 && (
-            <span className="text-[10px] text-gray-400">+{room.amenities.length - 4} more</span>
+      {/* Image carousel */}
+      <div className={isEven ? '' : 'lg:order-2'}>
+        <div className="relative overflow-hidden" style={{ borderRadius: 16, aspectRatio: '4/3' }}>
+          <img
+            src={room.images[imgIdx]}
+            alt={room.roomName}
+            className="w-full h-full object-cover transition-opacity duration-300"
+          />
+          {total > 1 && (
+            <>
+              <button
+                onClick={prev}
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/85 hover:bg-white shadow flex items-center justify-center transition-colors"
+              >
+                <ChevronLeft size={16} className="text-navy-700" />
+              </button>
+              <button
+                onClick={next}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/85 hover:bg-white shadow flex items-center justify-center transition-colors"
+              >
+                <ChevronRight size={16} className="text-navy-700" />
+              </button>
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                {room.images.map((_, i) => (
+                  <button key={i} onClick={() => setImgIdx(i)}
+                    className={`w-1.5 h-1.5 rounded-full transition-all ${i === imgIdx ? 'bg-white w-4' : 'bg-white/50'}`} />
+                ))}
+              </div>
+            </>
           )}
         </div>
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-          <div>
-            <span className="text-2xl font-medium text-navy-700">₹{room.price.toLocaleString('en-IN')}</span>
-            <span className="text-xs text-gray-400 ml-1">/ night</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1 text-xs text-gray-500">
-              <Users size={12} /> {room.maxGuests}
-            </span>
-            <Link
-              to={`/rooms/${room.slug}`}
-              className="bg-gold-400 hover:bg-gold-300 text-navy-800 text-xs tracking-[1px] px-4 py-2 rounded-sm transition-colors"
-            >
-              VIEW DETAILS
-            </Link>
-          </div>
+      </div>
+
+      {/* Content */}
+      <div className={isEven ? '' : 'lg:order-1'}>
+        <p className="text-gold-500 text-[10px] tracking-[3px] uppercase mb-2">{room.roomType}</p>
+        <h2 className="font-serif text-navy-800 mb-4" style={{ fontSize: 'clamp(1.4rem, 4vw, 2rem)', fontWeight: 700 }}>
+          {room.roomName}
+        </h2>
+        <p className="text-gray-600 leading-relaxed mb-7" style={{ fontSize: '14px' }}>
+          {room.description}
+        </p>
+
+        {/* Specs grid */}
+        <div className="grid grid-cols-2 gap-x-6 mb-8">
+          {[
+            { icon: Maximize2, label: room.size },
+            { icon: Wifi,      label: 'Complimentary Wi-Fi' },
+            { icon: BedDouble, label: room.bedType },
+            { icon: Users,     label: `Up to ${GUEST_WORDS[room.maxGuests] || room.maxGuests} Guests` },
+          ].map(({ icon: Icon, label }) => (
+            <div key={label} className="flex items-center gap-3 border-b border-gray-200 py-3">
+              <Icon size={15} className="text-gray-400 flex-shrink-0" />
+              <span className="text-sm text-gray-600">{label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div className="flex items-center gap-8">
+          <Link
+            to={`/rooms/${room.slug}`}
+            className="bg-gold-400 hover:bg-gold-300 text-white font-medium transition-colors"
+            style={{ borderRadius: 8, padding: '12px 36px', fontSize: '14px' }}
+          >
+            Explore
+          </Link>
         </div>
       </div>
     </motion.div>
@@ -68,59 +134,41 @@ function RoomCard({ room, index }: { room: typeof ROOMS[0]; index: number }) {
 }
 
 export default function RoomsPage() {
-  const [activeType, setActiveType] = useState('all')
-
-  const { data } = useQuery({
-    queryKey: ['rooms'],
-    queryFn: () => roomsService.getAll().then(r => r.data),
-    placeholderData: { data: ROOMS },
-  })
-
-  const rooms = data?.data || ROOMS
-  const filtered = activeType === 'all' ? rooms : rooms.filter((r: any) => r.roomType === activeType)
-
   return (
-    <div className="min-h-screen bg-cream-50 pt-20">
-      {/* Header */}
-      <div className="bg-navy-700 py-16 text-center">
-        <p className="text-gold-400 text-[11px] tracking-[5px] mb-3">ACCOMMODATIONS</p>
-        <h1 className="font-serif text-4xl text-white mb-3">Our Rooms & Villas</h1>
-        <p className="text-navy-300 text-sm max-w-xl mx-auto">
-          Each space is thoughtfully crafted with locally-sourced materials, premium furnishings, and breathtaking views of Tamil Nadu's natural beauty.
-        </p>
-      </div>
+    <div className="min-h-screen bg-white pt-28">
 
-      {/* Filters */}
-      <div className="sticky top-20 z-30 bg-white border-b border-gray-200 py-4">
-        <div className="max-w-7xl mx-auto px-6 flex items-center gap-2 flex-wrap">
-          <Filter size={14} className="text-gray-400" />
-          {ROOM_TYPES.map(type => (
-            <button
-              key={type}
-              onClick={() => setActiveType(type)}
-              className={`px-4 py-1.5 rounded-sm text-xs tracking-[1px] capitalize transition-colors ${
-                activeType === type
-                  ? 'bg-navy-700 text-gold-400'
-                  : 'border border-gray-200 text-gray-600 hover:border-gold-400 hover:text-gold-500'
-              }`}
-            >
-              {type === 'all' ? 'ALL ROOMS' : type}
-            </button>
-          ))}
-          <span className="ml-auto text-xs text-gray-400">{filtered.length} rooms</span>
+      {/* Hero banner */}
+      <div className="relative h-64 md:h-[400px] overflow-hidden">
+        <img
+          src="/banner.jpg"
+          alt="Our Rooms"
+          className="w-full h-full object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-navy-900/55" />
+        <div className="absolute top-6 left-0 right-0 max-w-7xl mx-auto px-6">
+          <p className="text-sm text-white/70">
+            <Link to="/" className="font-medium text-white/80 hover:text-white transition-colors">Home</Link>
+            <span className="mx-2 text-white/50">&gt;</span>
+            <span>Rooms</span>
+          </p>
+        </div>
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+            className="text-gold-400 text-[10px] tracking-[4px] uppercase mb-3">Sky Stay Resorts, Yercaud</motion.p>
+          <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
+            className="font-serif text-white font-bold mb-3" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)' }}>
+            Our Rooms & Villas
+          </motion.h1>
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-white/75 text-sm max-w-md leading-relaxed">
+            From garden-view deluxe rooms to private pool villas — find the perfect space for your stay.
+          </motion.p>
         </div>
       </div>
 
-      {/* Grid */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((room: any, i: number) => (
-            <RoomCard key={room.id} room={room} index={i} />
-          ))}
-        </div>
-        {filtered.length === 0 && (
-          <div className="text-center py-20 text-gray-400">No rooms found for this filter.</div>
-        )}
+      {/* Room list */}
+      <div className="max-w-5xl mx-auto px-6 py-8">
+        {ROOMS.map((room, i) => <RoomRow key={room.id} room={room} index={i} />)}
       </div>
     </div>
   )

@@ -1,125 +1,129 @@
 import { Link } from 'react-router-dom'
-import { Phone, Mail, MapPin, Instagram, Facebook, Youtube } from 'lucide-react'
+import { Mail, Phone } from 'lucide-react'
 
-const rooms = [
-  { label: 'Deluxe Garden Room',     to: '/rooms/deluxe-garden-room' },
-  { label: 'Premium Valley Suite',   to: '/rooms/premium-valley-suite' },
-  { label: 'Luxury Pool Villa',      to: '/rooms/luxury-pool-villa' },
-  { label: 'Forest Retreat Cottage', to: '/rooms/forest-retreat-cottage' },
-  { label: 'Horizon Penthouse',      to: '/rooms/horizon-penthouse' },
-  { label: 'Romance Suite',          to: '/rooms/romance-suite' },
+const IconFacebook = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+  </svg>
+)
+const IconInstagram = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+  </svg>
+)
+const IconWhatsApp = () => (
+  <svg viewBox="0 0 32 32" width="20" height="20" fill="currentColor">
+    <path d="M16.003 2C8.28 2 2 8.28 2 16.003c0 2.47.643 4.79 1.77 6.802L2 30l7.397-1.74A13.94 13.94 0 0 0 16.003 30C23.72 30 30 23.72 30 16.003 30 8.28 23.72 2 16.003 2zm0 25.452a11.4 11.4 0 0 1-5.817-1.596l-.418-.248-4.39 1.033 1.058-4.277-.272-.44A11.388 11.388 0 0 1 4.61 16c0-6.285 5.112-11.394 11.393-11.394 6.282 0 11.394 5.11 11.394 11.394 0 6.283-5.112 11.452-11.394 11.452zm6.254-8.546c-.344-.172-2.035-1.004-2.35-1.118-.315-.115-.544-.172-.773.172-.229.344-.887 1.118-1.087 1.347-.2.23-.4.258-.744.086-.344-.172-1.452-.535-2.766-1.706-1.022-.913-1.712-2.04-1.912-2.384-.2-.344-.021-.53.15-.701.155-.154.344-.4.516-.6.172-.2.229-.344.344-.573.115-.23.057-.43-.029-.602-.086-.172-.773-1.863-1.059-2.55-.279-.67-.562-.578-.773-.588l-.659-.011c-.229 0-.6.086-.915.43-.315.344-1.202 1.175-1.202 2.866 0 1.691 1.23 3.324 1.402 3.553.172.229 2.42 3.695 5.863 5.183.82.354 1.459.565 1.958.723.823.261 1.572.224 2.163.136.66-.099 2.035-.831 2.321-1.635.287-.803.287-1.49.201-1.634-.085-.144-.315-.23-.659-.4z"/>
+  </svg>
+)
+const IconYoutube = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+  </svg>
+)
+
+const navLinks = [
+  { label: 'Home',             to: '/' },
+  { label: 'Rooms',            to: '/rooms' },
+  { label: 'Amenities',        to: '/amenities' },
+  { label: 'Facilities',       to: '/facilities' },
+  { label: 'Gallery',          to: '/gallery' },
+  { label: 'Offers',           to: '/offers' },
+  { label: 'Places to Visit',  to: '/places-to-visit' },
+  { label: 'Activities',       to: '/resort-activities' },
+  { label: 'Contact Us',       to: '/contact' },
 ]
 
-const quickLinks = [
-  { label: 'About Us',         to: '/about' },
-  { label: 'Amenities',        to: '/amenities' },
-  { label: 'Gallery',          to: '/gallery' },
-  { label: 'Offers & Packages',to: '/offers' },
-  { label: 'Blog',             to: '/blog' },
-  { label: 'Contact Us',       to: '/contact' },
+const socials = [
+  { icon: IconFacebook,  href: 'https://facebook.com',                  label: 'Facebook' },
+  { icon: IconInstagram, href: 'https://instagram.com',                  label: 'Instagram' },
+  { icon: IconWhatsApp,  href: 'https://wa.me/919003010567',             label: 'WhatsApp' },
+  { icon: IconYoutube,   href: 'https://youtube.com',                    label: 'YouTube' },
 ]
 
 export default function Footer() {
   return (
-    <footer className="bg-navy-900 text-white">
-      {/* Top Section */}
-      <div className="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+    <footer style={{ background: '#f2e4c8' }}>
+      <div className="max-w-5xl mx-auto px-6 pt-12 pb-6">
 
-        {/* Brand */}
-        <div>
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-9 h-8" style={{ background: '#c9a84c', clipPath: 'polygon(50% 0%,0% 100%,100% 100%)' }} />
-            <div>
-              <div className="text-lg font-medium tracking-wide">Sky Stay</div>
-              <div className="text-[9px] tracking-[4px] text-gold-400">RESORTS</div>
+        {/* Top: two columns */}
+        <div className="flex flex-col md:flex-row gap-10 md:gap-16 mb-8">
+
+          {/* LEFT — About */}
+          <div className="flex-1 flex flex-col gap-3">
+            <h2 className="font-serif text-gray-900" style={{ fontSize: '22px', fontWeight: 700 }}>
+              Sky Stay Resorts, Yercaud
+            </h2>
+            <p className="tracking-[3px] text-gray-700 uppercase" style={{ fontSize: '13px', fontWeight: 800 }}>About Us</p>
+            <p className="text-gray-700 text-sm leading-relaxed">
+              Sky Stay Resorts is a premium hill resort nestled in the serene mountains of Yercaud, Tamil Nadu. We offer luxurious accommodations, curated experiences, and warm hospitality — making every stay an unforgettable escape into nature.
+            </p>
+            <p className="text-gray-600 text-sm leading-relaxed">
+              10-D, Asambur, Manjakuttai Road,<br />Yercaud - 636602, Tamil Nadu, India
+            </p>
+          </div>
+
+          {/* RIGHT — Contact + Social */}
+          <div className="flex flex-col gap-4">
+
+            {/* Email */}
+            <a href="mailto:info@skystayresorts.com"
+              className="flex items-center gap-2.5 text-sm text-gray-800 hover:text-gray-900 transition-colors">
+              <span className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: '#1a1a1a' }}>
+                <Mail size={14} className="text-white" />
+              </span>
+              info@skystayresorts.com
+            </a>
+
+            {/* Phone */}
+            <div className="flex items-center gap-2.5 text-sm text-gray-800">
+              <span className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 self-center" style={{ background: '#1a1a1a' }}>
+                <Phone size={14} className="text-white" />
+              </span>
+              <div className="flex flex-col" style={{ lineHeight: '1.65' }}>
+                <a href="tel:+919003010567" className="hover:text-gray-900 transition-colors">+91 90030 10567</a>
+                <a href="tel:+919488867071" className="hover:text-gray-900 transition-colors">+91 94888 67071</a>
+              </div>
+            </div>
+
+            {/* Social */}
+            <div className="flex flex-col gap-2 mt-1">
+              <p className="text-sm text-gray-700 font-medium tracking-wide">Get In Touch</p>
+              <div className="flex items-center gap-3">
+                {socials.map(({ icon: Icon, href, label }) => (
+                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
+                    className="w-10 h-10 flex items-center justify-center transition-opacity hover:opacity-75"
+                    style={{ background: '#1a1a1a', borderRadius: '10px', color: '#fff' }}>
+                    <Icon />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
-          <p className="text-navy-400 text-sm leading-relaxed mb-5">
-            A premium resort nestled in Tamil Nadu, offering luxury accommodation, curated experiences, and memories that last a lifetime.
-          </p>
-          <div className="flex gap-3">
-            {[
-              { icon: Instagram, href: 'https://instagram.com' },
-              { icon: Facebook,  href: 'https://facebook.com' },
-              { icon: Youtube,   href: 'https://youtube.com' },
-            ].map(({ icon: Icon, href }) => (
-              <a key={href} href={href} target="_blank" rel="noopener noreferrer"
-                className="w-8 h-8 rounded border border-navy-700 flex items-center justify-center text-navy-400 hover:border-gold-400 hover:text-gold-400 transition-colors">
-                <Icon size={14} />
-              </a>
+        </div>
+
+        {/* Divider */}
+        <div className="border-t" style={{ borderColor: 'rgba(0,0,0,0.15)' }} />
+
+        {/* Bottom: nav + copyright */}
+        <div className="pt-5 flex flex-col items-center gap-3">
+          <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            {navLinks.map(l => (
+              <Link key={l.to} to={l.to}
+                className="text-sm text-gray-700 hover:text-gray-900 transition-colors">
+                {l.label}
+              </Link>
             ))}
+          </nav>
+          <div className="flex items-center gap-2 text-xs text-gray-500">
+            <span>&copy; {new Date().getFullYear()} Sky Stay Resorts. All rights reserved.</span>
+            <span className="opacity-40">|</span>
+            <Link to="/terms-and-conditions" className="hover:text-gray-800 transition-colors underline underline-offset-2">
+              Terms & Conditions
+            </Link>
           </div>
         </div>
 
-        {/* Rooms */}
-        <div>
-          <h3 className="text-xs tracking-[3px] text-gold-400 mb-5">OUR ROOMS</h3>
-          <ul className="space-y-2.5">
-            {rooms.map(r => (
-              <li key={r.to}>
-                <Link to={r.to} className="text-navy-400 text-sm hover:text-gold-400 transition-colors">
-                  {r.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Quick Links */}
-        <div>
-          <h3 className="text-xs tracking-[3px] text-gold-400 mb-5">EXPLORE</h3>
-          <ul className="space-y-2.5">
-            {quickLinks.map(l => (
-              <li key={l.to}>
-                <Link to={l.to} className="text-navy-400 text-sm hover:text-gold-400 transition-colors">
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Contact */}
-        <div>
-          <h3 className="text-xs tracking-[3px] text-gold-400 mb-5">REACH US</h3>
-          <ul className="space-y-4">
-            <li className="flex gap-3">
-              <MapPin size={15} className="text-gold-400 mt-0.5 flex-shrink-0" />
-              <span className="text-navy-400 text-sm leading-relaxed">Sky Stay Resorts, Kodaikanal Road, Tamil Nadu — 624101</span>
-            </li>
-            <li className="flex gap-3">
-              <Phone size={15} className="text-gold-400 mt-0.5 flex-shrink-0" />
-              <a href="tel:+919876543210" className="text-navy-400 text-sm hover:text-gold-400 transition-colors">+91 98765 43210</a>
-            </li>
-            <li className="flex gap-3">
-              <Mail size={15} className="text-gold-400 mt-0.5 flex-shrink-0" />
-              <a href="mailto:hello@skystayresorts.com" className="text-navy-400 text-sm hover:text-gold-400 transition-colors">hello@skystayresorts.com</a>
-            </li>
-          </ul>
-
-          {/* WhatsApp CTA */}
-          <a
-            href="https://wa.me/919876543210?text=Hi! I'd like to book a stay at Sky Stay Resorts."
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 mt-6 px-4 py-2 bg-[#25D366] hover:bg-[#1fbc59] text-white text-xs rounded-sm transition-colors"
-          >
-            <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            Chat on WhatsApp
-          </a>
-        </div>
-      </div>
-
-      {/* Bottom Bar */}
-      <div className="border-t border-navy-800">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-navy-500">
-          <span>© {new Date().getFullYear()} Sky Stay Resorts. All rights reserved.</span>
-          <div className="flex gap-5">
-            <Link to="/privacy" className="hover:text-gold-400 transition-colors">Privacy Policy</Link>
-            <Link to="/terms"   className="hover:text-gold-400 transition-colors">Terms of Use</Link>
-            <Link to="/cancellation" className="hover:text-gold-400 transition-colors">Cancellation</Link>
-          </div>
-        </div>
       </div>
     </footer>
   )

@@ -1,3 +1,9 @@
+﻿@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/600.css';
+@import '@fontsource/poppins/700.css';
+@import '@fontsource/pt-sans/400.css';
+@import '@fontsource/pt-sans/700.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,11 +14,90 @@
   }
 
   body {
-    @apply font-sans text-navy-700 antialiased;
+    font-family: 'Poppins', 'PT Sans', system-ui, sans-serif;
+    color: #1b2b6b;
+    background-color: #f0fceb;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'PT Sans', 'Poppins', Georgia, serif;
+    font-weight: 700;
+    text-wrap: balance;
+    letter-spacing: 0.01em;
+  }
+
+  p {
+    line-height: 1.8;
   }
 
   * {
     box-sizing: border-box;
+  }
+}
+
+@layer components {
+  /* GRT-style section header pattern */
+  .section-label {
+    @apply text-gold-500 font-sans font-normal uppercase;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    font-weight: 400;
+  }
+
+  .section-ornament {
+    @apply flex items-center justify-center gap-3 my-3;
+    color: #c9a84c;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+  }
+
+  .section-ornament::before,
+  .section-ornament::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: #c9a84c;
+    opacity: 0.6;
+  }
+
+  /* Luxury button â€” thin border ghost style */
+  .btn-luxury {
+    @apply inline-flex items-center gap-2 border border-gold-400 text-gold-500 font-sans uppercase;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    padding: 12px 28px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-luxury:hover {
+    @apply bg-gold-400 text-navy-900;
+  }
+
+  .btn-luxury-filled {
+    @apply inline-flex items-center gap-2 bg-gold-400 text-navy-900 font-sans uppercase;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    padding: 13px 32px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-luxury-filled:hover {
+    @apply bg-gold-300;
+  }
+
+  /* Thin divider */
+  .divider-gold {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #c9a84c55, transparent);
   }
 }
 
@@ -30,12 +115,44 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  .tracking-luxury {
+    letter-spacing: 0.25em;
+  }
+
+  .tracking-widest-xl {
+    letter-spacing: 0.35em;
+  }
+}
+
+/* Reviews marquee */
+@keyframes reviews-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.reviews-marquee-track {
+  animation: reviews-scroll 35s linear infinite;
+}
+.reviews-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Instagram reels marquee */
+@keyframes instagram-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.instagram-marquee-track {
+  animation: instagram-scroll 140s linear infinite;
+}
+.instagram-marquee-track:hover {
+  animation-play-state: paused;
 }
 
 /* Custom scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #f4f0e8; }
-::-webkit-scrollbar-thumb { background: #c9a84c; border-radius: 3px; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #f0fceb; }
+::-webkit-scrollbar-thumb { background: #c9a84c; }
 ::-webkit-scrollbar-thumb:hover { background: #b8922d; }
 
 /* Razorpay modal z-index fix */

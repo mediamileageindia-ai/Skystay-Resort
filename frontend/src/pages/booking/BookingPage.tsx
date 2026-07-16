@@ -297,12 +297,6 @@ export default function BookingPage() {
                                 <p className="text-xs text-gray-500 mt-0.5">{room.description?.slice(0, 60)}…</p>
                               </div>
                             </div>
-                            <div className="text-right ml-4">
-                              <p className="text-base font-medium text-navy-700">
-                                ₹{room.price.toLocaleString('en-IN')}
-                              </p>
-                              <p className="text-xs text-gray-400">/ night</p>
-                            </div>
                           </div>
                         </div>
                       ))}
@@ -340,26 +334,6 @@ export default function BookingPage() {
                     {selectedRoomName && (
                       <p className="font-medium mb-4 pb-4 border-b border-white/10">{selectedRoomName}</p>
                     )}
-                    <div className="space-y-3 text-sm">
-                      <div className="flex justify-between text-gray-300">
-                        <span>₹{pricePerNight.toLocaleString('en-IN')} × {nights} night{nights > 1 ? 's' : ''}</span>
-                        <span>₹{(pricePerNight * nights).toLocaleString('en-IN')}</span>
-                      </div>
-                      {discount > 0 && (
-                        <div className="flex justify-between text-green-400">
-                          <span>Coupon discount</span>
-                          <span>−₹{discount.toLocaleString('en-IN')}</span>
-                        </div>
-                      )}
-                      <div className="flex justify-between text-gray-300">
-                        <span>GST (12%)</span>
-                        <span>₹{taxAmt.toLocaleString('en-IN')}</span>
-                      </div>
-                      <div className="flex justify-between font-medium text-gold-400 text-base pt-3 border-t border-white/10">
-                        <span>Total</span>
-                        <span>₹{totalAmt.toLocaleString('en-IN')}</span>
-                      </div>
-                    </div>
                     <button
                       onClick={() => {
                         if (!selectedRoomId) { toast.error('Please select a room'); return }

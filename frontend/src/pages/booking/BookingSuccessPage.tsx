@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from 'react-router-dom'
+﻿import { Link, useSearchParams } from 'react-router-dom'
 import { CheckCircle, XCircle, ArrowRight, Phone } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useBookingStore } from '@/store'
@@ -48,9 +48,9 @@ export function BookingSuccessPage() {
         {/* Check-in info */}
         <div className="bg-navy-700 rounded-sm p-4 mb-6 text-sm text-white space-y-1">
           <p className="text-gold-400 text-xs tracking-[1px] mb-2">CHECK-IN INFORMATION</p>
-          <p>📍 Sky Stay Resorts, Kodaikanal Road, Tamil Nadu 624101</p>
+          <p>📍 10-D, Asambur, Manjakuttai Road, Yercaud - 636602, Tamil Nadu</p>
           <p>⏰ Check-in from 2:00 PM · Check-out by 11:00 AM</p>
-          <p>📞 <a href="tel:+919876543210" className="text-gold-400">+91 98765 43210</a></p>
+          <p>📞 <a href="tel:+919003010567" className="text-gold-400">+91 90030 10567</a></p>
         </div>
 
         <div className="flex gap-3">
@@ -92,9 +92,9 @@ export function BookingFailurePage() {
             className="w-full flex items-center justify-center gap-2 bg-gold-400 hover:bg-gold-300 text-navy-800 font-medium text-xs tracking-[2px] py-3 rounded-sm transition-colors">
             TRY AGAIN <ArrowRight size={14} />
           </Link>
-          <a href="tel:+919876543210"
+          <a href="tel:+919003010567"
             className="w-full flex items-center justify-center gap-2 border border-gray-200 text-gray-600 text-xs tracking-[1px] py-3 rounded-sm hover:bg-gray-50 transition-colors">
-            <Phone size={14} /> CALL US — +91 98765 43210
+            <Phone size={14} /> CALL US — +91 90030 10567
           </a>
           <Link to="/" onClick={reset}
             className="block text-sm text-gray-400 hover:text-gray-600 transition-colors pt-2">

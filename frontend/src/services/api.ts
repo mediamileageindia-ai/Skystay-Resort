@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 import toast from 'react-hot-toast'
+import { supabase } from '@/lib/supabase'
 
 // ============================================
 // SKY STAY — Axios API Client
@@ -89,32 +90,93 @@ export const authService = {
 }
 
 // ============================================
-// ROOMS SERVICE
+// HELPERS — normalize Supabase snake_case → camelCase
+// ============================================
+function normalizeRoom(r: any) {
+  return {
+    id: r.id,
+    slug: r.slug,
+    roomName: r.room_name ?? r.roomName,
+    roomType: r.room_type ?? r.roomType,
+    price: r.price,
+    maxGuests: r.max_guests ?? r.maxGuests,
+    description: r.description,
+    amenities: r.amenities ?? [],
+    images: (r.images ?? []).map((img: any) =>
+      typeof img === 'string' ? { url: img } : img
+    ),
+    isFeatured: r.is_featured ?? r.isFeatured,
+    status: r.status ?? 'available',
+  }
+}
+
+function normalizeOffer(o: any) {
+  return {
+    id: o.id,
+    title: o.title,
+    tag: o.tag,
+    description: o.description,
+    discountType: o.discount_type ?? o.discountType,
+    discountValue: o.discount_value ?? o.discountValue,
+    couponCode: o.coupon_code ?? o.couponCode,
+    isActive: o.is_active ?? true,
+  }
+}
+
+function normalizeReview(rv: any) {
+  return {
+    id: rv.id,
+    name: rv.name,
+    city: rv.city,
+    rating: rv.rating,
+    comment: rv.comment,
+    date: rv.created_at ? new Date(rv.created_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : '',
+  }
+}
+
+// ============================================
+// ROOMS SERVICE — Supabase primary, API fallback
 // ============================================
 export const roomsService = {
-  getAll: (params?: { type?: string; status?: string }) =>
-    api.get('/rooms', { params }),
+  getAll: async (params?: { type?: string; status?: string }) => {
+    try {
+      let query = supabase.from('rooms').select('*').order('price', { ascending: true })
+      if (params?.type && params.type !== 'all') query = query.eq('room_type', params.type)
+      if (params?.status) query = query.eq('status', params.status)
+      const { data, error } = await query
+      if (error) throw error
+      return { data: { data: (data ?? []).map(normalizeRoom) } }
+    } catch {
+      return api.get('/rooms', { params })
+    }
+  },
 
-  getBySlug: (slug: string) =>
-    api.get(`/rooms/${slug}`),
+  getBySlug: async (slug: string) => {
+    try {
+      const { data, error } = await supabase.from('rooms').select('*').eq('slug', slug).single()
+      if (error) throw error
+      return { data: { data: normalizeRoom(data) } }
+    } catch {
+      return api.get(`/rooms/${slug}`)
+    }
+  },
+
+  getFeatured: async () => {
+    const { data, error } = await supabase.from('rooms').select('*').eq('is_featured', true).order('price')
+    if (error) throw error
+    return { data: { data: (data ?? []).map(normalizeRoom) } }
+  },
 
   checkAvailability: (params: {
-    checkIn: string
-    checkOut: string
-    guests: number
-    roomType?: string
+    checkIn: string; checkOut: string; guests: number; roomType?: string
   }) => api.get('/rooms/availability', { params }),
 
   // Admin
   create: (data: FormData) =>
     api.post('/rooms', data, { headers: { 'Content-Type': 'multipart/form-data' } }),
-
   update: (id: string, data: Partial<{ roomName: string; price: number; status: string }>) =>
     api.patch(`/rooms/${id}`, data),
-
-  delete: (id: string) =>
-    api.delete(`/rooms/${id}`),
-
+  delete: (id: string) => api.delete(`/rooms/${id}`),
   uploadImages: (id: string, images: FormData) =>
     api.post(`/rooms/${id}/images`, images, { headers: { 'Content-Type': 'multipart/form-data' } }),
 }
@@ -176,16 +238,20 @@ export const paymentsService = {
 }
 
 // ============================================
-// OFFERS SERVICE
+// OFFERS SERVICE — Supabase primary
 // ============================================
 export const offersService = {
-  getAll: () =>
-    api.get('/offers'),
-
+  getAll: async () => {
+    try {
+      const { data, error } = await supabase.from('offers').select('*').eq('is_active', true)
+      if (error) throw error
+      return { data: { data: (data ?? []).map(normalizeOffer) } }
+    } catch {
+      return api.get('/offers')
+    }
+  },
   validateCoupon: (code: string, roomId: string, checkIn: string, checkOut: string) =>
     api.post('/offers/validate', { code, roomId, checkIn, checkOut }),
-
-  // Admin
   create: (data: object) => api.post('/offers', data),
   update: (id: string, data: object) => api.patch(`/offers/${id}`, data),
   delete: (id: string) => api.delete(`/offers/${id}`),
@@ -253,12 +319,91 @@ export const adminService = {
 }
 
 // ============================================
-// REVIEWS SERVICE
+// REVIEWS SERVICE — Supabase primary
 // ============================================
 export const reviewsService = {
-  getAll: (roomId?: string) =>
-    api.get('/reviews', { params: { roomId } }),
-
+  getAll: async (roomId?: string) => {
+    try {
+      let query = supabase.from('reviews').select('*').eq('is_approved', true).order('created_at', { ascending: false })
+      if (roomId) query = query.eq('room_slug', roomId)
+      const { data, error } = await query
+      if (error) throw error
+      return { data: { data: (data ?? []).map(normalizeReview) } }
+    } catch {
+      return api.get('/reviews', { params: { roomId } })
+    }
+  },
   create: (data: { roomId?: string; rating: number; comment: string }) =>
     api.post('/reviews', data),
+}
+
+// ============================================
+// AMENITIES SERVICE — Supabase primary
+// ============================================
+export const amenitiesService = {
+  getAll: async () => {
+    try {
+      const { data, error } = await supabase
+        .from('amenities')
+        .select('*')
+        .eq('is_active', true)
+        .order('display_order', { ascending: true })
+      if (error) throw error
+      return { data: { data: data ?? [] } }
+    } catch {
+      return { data: { data: [] } }
+    }
+  },
+}
+
+// ============================================
+// PLACES TO VISIT SERVICE — Supabase primary
+// ============================================
+export const placesService = {
+  getAll: async () => {
+    try {
+      const { data, error } = await supabase
+        .from('places_to_visit')
+        .select('*')
+        .eq('is_active', true)
+        .order('display_order', { ascending: true })
+      if (error) throw error
+      return { data: { data: data ?? [] } }
+    } catch {
+      return { data: { data: [] } }
+    }
+  },
+}
+
+// ============================================
+// GOOGLE REVIEWS SERVICE — Vercel serverless proxy
+// ============================================
+export const googleReviewsService = {
+  getAll: async () => {
+    try {
+      const base = import.meta.env.PROD ? '' : 'http://localhost:3000'
+      const res = await fetch(`${base}/api/google-reviews`)
+      if (!res.ok) throw new Error('fetch failed')
+      return await res.json()
+    } catch {
+      return { reviews: [], overallRating: null, totalRatings: null }
+    }
+  },
+}
+
+// ============================================
+// GALLERY SERVICE — Supabase primary
+// ============================================
+export const galleryService = {
+  getAll: async (category?: string) => {
+    try {
+      let query = supabase.from('gallery').select('*').eq('is_active', true).order('display_order')
+      if (category && category !== 'all') query = query.eq('category', category)
+      const { data, error } = await query
+      if (error) throw error
+      return { data: { data: data ?? [] } }
+    } catch {
+      return { data: { data: [] } }
+    }
+  },
 }

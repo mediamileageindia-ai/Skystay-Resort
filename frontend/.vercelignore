@@ -1,0 +1,15 @@
+node_modules
+dist
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+public/New Skystay
+public/Video
+public/resort-photos
+public/**/*.mp4
+public/**/*.jpeg
+public/**/*.png
+public/**/*.avif
+public/**/*.webp
+public/**/*.jfif

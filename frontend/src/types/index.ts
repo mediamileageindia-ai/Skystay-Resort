@@ -87,6 +87,7 @@ export interface Booking {
   status: BookingStatus
   specialRequests?: string
   payment?: Payment
+  guestSnapshot?: { name: string; email: string; phone: string; city?: string }
   createdAt: string
 }
 

@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { User } from '@/types'
-import { authService } from '@/services/api'
+import { supabase } from '@/lib/supabase'
 import toast from 'react-hot-toast'
 
 interface AuthStore {
@@ -27,36 +27,47 @@ export const useAuthStore = create<AuthStore>()(
       login: async (email, password) => {
         set({ isLoading: true })
 
-        // Demo bypass — works without backend
-        const DEMO_USERS: Record<string, { password: string; user: any; token: string }> = {
-          'admin@skystayresorts.com': {
-            password: 'Admin@123',
-            token: 'demo-admin-token',
-            user: { id: '1', name: 'Resort Admin', email: 'admin@skystayresorts.com', phone: '9999999999', role: 'admin', createdAt: new Date().toISOString() },
-          },
-          'guest@skystayresorts.com': {
-            password: 'Guest@123',
-            token: 'demo-guest-token',
-            user: { id: '2', name: 'Demo Guest', email: 'guest@skystayresorts.com', phone: '9876543210', role: 'guest', createdAt: new Date().toISOString() },
-          },
+        // Demo bypass for admin/guest accounts
+        const DEMO: Record<string, { password: string; name: string; role: 'admin' | 'guest' }> = {
+          'admin@skystayresorts.com': { password: 'Admin@123', name: 'Resort Admin', role: 'admin' },
+          'guest@skystayresorts.com': { password: 'Guest@123', name: 'Demo Guest',   role: 'guest' },
         }
-        const demo = DEMO_USERS[email]
+        const demo = DEMO[email.toLowerCase()]
         if (demo && demo.password === password) {
-          set({ user: demo.user, token: demo.token, isAuthenticated: true, isLoading: false })
-          localStorage.setItem('skystay_token', demo.token)
-          toast.success(`Welcome back, ${demo.user.name.split(' ')[0]}!`)
+          const user: User = { id: 'demo-' + demo.role, name: demo.name, email, phone: '', role: demo.role, createdAt: new Date().toISOString() }
+          set({ user, token: 'demo-token-' + demo.role, isAuthenticated: true, isLoading: false })
+          localStorage.setItem('skystay_token', 'demo-token-' + demo.role)
+          toast.success(`Welcome back, ${demo.name.split(' ')[0]}!`)
           return true
         }
 
         try {
-          const res = await authService.login({ email, password })
-          const { user, access_token } = res.data
-          set({ user, token: access_token, isAuthenticated: true, isLoading: false })
-          localStorage.setItem('skystay_token', access_token)
+          const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+          if (error) throw error
+
+          // Fetch role from profiles table
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('name, role, phone, city')
+            .eq('id', data.user.id)
+            .single()
+
+          const user: User = {
+            id: data.user.id,
+            name: profile?.name ?? data.user.user_metadata?.name ?? email.split('@')[0],
+            email: data.user.email!,
+            phone: profile?.phone ?? '',
+            role: (profile?.role ?? 'guest') as 'admin' | 'guest',
+            createdAt: data.user.created_at,
+          }
+
+          set({ user, token: data.session?.access_token ?? null, isAuthenticated: true, isLoading: false })
+          localStorage.setItem('skystay_token', data.session?.access_token ?? '')
           toast.success(`Welcome back, ${user.name.split(' ')[0]}!`)
           return true
-        } catch {
+        } catch (err: any) {
           set({ isLoading: false })
+          toast.error(err?.message === 'Invalid login credentials' ? 'Invalid email or password.' : 'Login failed. Please try again.')
           return false
         }
       },
@@ -64,19 +75,46 @@ export const useAuthStore = create<AuthStore>()(
       register: async (data) => {
         set({ isLoading: true })
         try {
-          const res = await authService.register(data)
-          const { user, access_token } = res.data
-          set({ user, token: access_token, isAuthenticated: true, isLoading: false })
-          localStorage.setItem('skystay_token', access_token)
-          toast.success(`Welcome to Sky Stay, ${user.name.split(' ')[0]}!`)
+          const { data: authData, error } = await supabase.auth.signUp({
+            email: data.email,
+            password: data.password,
+            options: { data: { name: data.name } },
+          })
+          if (error) throw error
+          if (!authData.user) throw new Error('Signup failed')
+
+          // Create profile
+          await supabase.from('profiles').insert({
+            id: authData.user.id,
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            city: data.city ?? '',
+            role: 'guest',
+          })
+
+          const user: User = {
+            id: authData.user.id,
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            role: 'guest',
+            createdAt: authData.user.created_at,
+          }
+
+          set({ user, token: authData.session?.access_token ?? null, isAuthenticated: true, isLoading: false })
+          localStorage.setItem('skystay_token', authData.session?.access_token ?? '')
+          toast.success(`Welcome to Sky Stay, ${data.name.split(' ')[0]}!`)
           return true
-        } catch {
+        } catch (err: any) {
           set({ isLoading: false })
+          toast.error(err?.message ?? 'Registration failed.')
           return false
         }
       },
 
-      logout: () => {
+      logout: async () => {
+        await supabase.auth.signOut()
         localStorage.removeItem('skystay_token')
         set({ user: null, token: null, isAuthenticated: false })
         toast.success('Logged out successfully.')

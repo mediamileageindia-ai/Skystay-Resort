@@ -16,4 +16,19 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react':  ['react', 'react-dom', 'react-router-dom'],
+          'vendor-motion': ['framer-motion'],
+          'vendor-query':  ['@tanstack/react-query'],
+          'vendor-supabase': ['@supabase/supabase-js'],
+          'vendor-forms':  ['react-hook-form', '@hookform/resolvers', 'zod'],
+          'vendor-ui':     ['lucide-react', 'react-hot-toast', 'clsx', 'tailwind-merge'],
+        },
+      },
+    },
+  },
 })
