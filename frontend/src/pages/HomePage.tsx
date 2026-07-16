@@ -239,7 +239,7 @@ const amenities = [
   { icon: Car,       label: 'Jeep Safari',          desc: 'Guided off-road adventure through scenic landscapes', img: '/gallery-jeep-safari.jpg',    link: '/resort-activities'  },
   { icon: Wifi,      label: 'High-Speed WiFi',      desc: 'Stay connected with high-speed internet',             img: '/gallery-wifi-room.jpg',     link: '/amenities'          },
   { icon: Utensils,  label: 'Restaurant',           desc: 'Multi-cuisine dining & room service',                 img: '/gallery-dining-1.jpg',       link: '/amenities'          },
-  { icon: Building2, label: 'Meeting Hall',         desc: 'Perfect space for events, meetings & celebrations',  img: '/gallery-meeting-hall.jpg',   link: '/facilities'         },
+  { icon: Building2, label: 'Meeting Hall',         desc: 'Perfect space for events, meetings & celebrations',  img: '/gallery-hall-2.jpg',         link: '/facilities'         },
   { icon: Trees,     label: 'Nature Trails',        desc: '3 km curated walk surrounded by nature',             img: '/place-botanical-garden.jpg', link: '/places-to-visit'    },
   { icon: Navigation,label: 'Trekking',             desc: 'Guided nature trekking for adventure lovers',        img: '/place-killiyur-falls.jpg',   link: '/resort-activities'  },
 ]
