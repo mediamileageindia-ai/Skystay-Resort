@@ -1053,7 +1053,7 @@ export default function HomePage() {
           <div className="text-center mb-10">
             <p className="section-label mb-3">WHY CHOOSE US</p>
             <div className="section-ornament">◆</div>
-            <h2 className="text-3xl md:text-4xl font-serif text-navy-900 mt-3">Best Resort in Salem | Premium Family Resort Near Yercaud</h2>
+            <h2 className="text-3xl md:text-4xl font-serif text-navy-900 mt-3">Best Resort in Yercaud</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-10 text-sm text-gray-600 leading-relaxed">
             <div>
