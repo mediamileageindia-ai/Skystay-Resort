@@ -741,8 +741,8 @@ const FACILITY_GROUPS = [
     category: 'Dining',
     items: [
       { name: 'Dining Hall', timing: '7 AM to 10 PM', image: '/gallery-dining-1.jpg' },
-      { name: 'Poolside Dinner', timing: '7 PM to 10 PM', image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80' },
-      { name: 'BBQ Night', timing: '7 PM to 10 PM', image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&q=80' },
+      { name: 'Dining Hall', timing: '7 AM to 10 PM', image: '/gallery-dining-2.jpg' },
+      { name: 'Dining Experience', timing: '7 AM to 10 PM', image: '/gallery-dining-3.jpg' },
     ],
   },
   {
