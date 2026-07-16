@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Utensils, Dumbbell, Shield, Car, CheckCircle, ChevronRight } from 'lucide-react'
+import { Utensils, Dumbbell, Shield, Car, CheckCircle, ChevronRight, Baby } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const FALLBACK_SECTIONS = [
@@ -155,7 +155,7 @@ export default function AmenitiesPage() {
           <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-3 gap-8 text-center">
             {[
               { icon: Utensils,  label: 'Fine Dining',       sub: 'Multi-cuisine restaurant' },
-              { icon: Dumbbell,  label: 'Recreation',        sub: 'Pool, gym & nature trails' },
+              { icon: Baby,      label: 'Kids Play Area',    sub: 'Safe & fun zone for children' },
               { icon: Shield,    label: 'Premium Services',  sub: 'Concierge & transfers' },
             ].map(({ icon: Icon, label, sub }) => (
               <div key={label} className="flex flex-col items-center gap-3">
