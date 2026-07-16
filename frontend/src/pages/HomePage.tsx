@@ -562,86 +562,24 @@ const INSTAGRAM_REELS = [
 ]
 
 function InstagramReelCard({ code }: { code: string }) {
-  const [loaded, setLoaded] = useState(false)
-  const [showEmbed, setShowEmbed] = useState(false)
-  const url = `https://www.instagram.com/reel/${code}/`
-
-  if (showEmbed) {
-    return (
-      <div
-        className="flex-shrink-0 rounded-xl overflow-hidden"
-        style={{ width: 280, height: 500, boxShadow: '0 4px 24px rgba(0,0,0,0.14)', background: '#000', position: 'relative' }}
-      >
-        <iframe
-          src={`https://www.instagram.com/reel/${code}/embed/`}
-          width="280"
-          height="500"
-          frameBorder="0"
-          scrolling="no"
-          allowFullScreen
-          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-          style={{ display: 'block', opacity: loaded ? 1 : 0, transition: 'opacity 0.4s' }}
-          title={`Instagram reel`}
-          onLoad={() => setLoaded(true)}
-        />
-        {!loaded && (
-          <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)' }}>
-            <div className="w-8 h-8 rounded-full border-2 border-white border-t-transparent animate-spin" />
-          </div>
-        )}
-      </div>
-    )
-  }
-
   return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={e => { e.preventDefault(); setShowEmbed(true) }}
-      className="flex-shrink-0 rounded-xl overflow-hidden cursor-pointer group"
-      style={{ width: 280, height: 500, boxShadow: '0 4px 24px rgba(0,0,0,0.14)', display: 'flex', flexDirection: 'column', textDecoration: 'none', background: 'linear-gradient(135deg,#833ab4 0%,#fd1d1d 50%,#fcb045 100%)' }}
+    <div
+      className="flex-shrink-0 rounded-2xl overflow-hidden"
+      style={{ width: 280, boxShadow: '0 4px 20px rgba(0,0,0,0.13)', background: '#fff' }}
     >
-      {/* Top bar */}
-      <div className="flex items-center gap-2 px-4 pt-4 pb-3" style={{ background: 'rgba(0,0,0,0.25)' }}>
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="white">
-          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
-        </svg>
-        <span style={{ color: 'white', fontSize: 12, fontWeight: 600, letterSpacing: '0.04em' }}>skystayresorts</span>
-        <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: 10, marginLeft: 'auto' }}>Reels</span>
-      </div>
-
-      {/* Center play area */}
-      <div className="flex-1 flex flex-col items-center justify-center gap-4">
-        {/* Play button */}
-        <div
-          className="group-hover:scale-110 transition-transform duration-300"
-          style={{ width: 72, height: 72, borderRadius: '50%', background: 'rgba(255,255,255,0.18)', border: '2.5px solid rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' }}
-        >
-          <svg viewBox="0 0 24 24" width="32" height="32" fill="white" style={{ marginLeft: 4 }}>
-            <path d="M8 5v14l11-7z"/>
-          </svg>
-        </div>
-        <p style={{ color: 'white', fontSize: 13, fontWeight: 600, letterSpacing: '0.05em' }}>Tap to Watch</p>
-
-        {/* Reel indicator lines */}
-        <div className="flex items-end gap-1" style={{ height: 32 }}>
-          {[14,22,18,28,16,24,20,26,15,19].map((h, i) => (
-            <div key={i} style={{ width: 3, height: h, background: 'rgba(255,255,255,0.5)', borderRadius: 2 }} />
-          ))}
-        </div>
-      </div>
-
-      {/* Bottom */}
-      <div className="px-4 pb-4 pt-3" style={{ background: 'rgba(0,0,0,0.3)' }}>
-        <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 11, lineHeight: 1.5 }}>
-          Sky Stay Resorts · Yercaud
-        </p>
-        <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 10, marginTop: 2 }}>
-          Guest experience reel ▶
-        </p>
-      </div>
-    </a>
+      <iframe
+        src={`https://www.instagram.com/reel/${code}/embed/`}
+        width="280"
+        height="520"
+        frameBorder="0"
+        scrolling="no"
+        allowFullScreen
+        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+        loading="lazy"
+        style={{ display: 'block', border: 'none' }}
+        title="Sky Stay Resorts Instagram Reel"
+      />
+    </div>
   )
 }
 
@@ -656,7 +594,7 @@ function InstagramReviews() {
           ❤ Guest Stories
         </h2>
         <p className="text-gray-500 mt-3 max-w-xl mx-auto text-sm leading-relaxed">
-          Real guests, real moments — tap any card to watch the reel from our visitors at Sky Stay Resorts.
+          Real guests, real moments — watch what our visitors are sharing from their stay at Sky Stay Resorts.
         </p>
         <a
           href="https://www.instagram.com/skystayresorts"
