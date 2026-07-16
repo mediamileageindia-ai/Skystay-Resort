@@ -234,14 +234,14 @@ function ViewPointCard({ vp, i }: { vp: typeof VIEWPOINTS[0], i: number }) {
 
 // ---- AMENITIES ----
 const amenities = [
-  { icon: Flame,     label: 'Fire Camp',            desc: 'Starlit bonfire evenings' },
-  { icon: Baby,      label: "Children's Play Area", desc: 'Safe & fun for kids' },
-  { icon: Car,       label: 'Jeep Safari',          desc: 'Guided off-road adventure' },
-  { icon: Wifi,      label: 'High-Speed WiFi',      desc: 'Fibre optic throughout' },
-  { icon: Utensils,  label: 'Restaurant',           desc: 'Multi-cuisine dining & room service' },
-  { icon: Building2, label: 'Meeting Hall',         desc: 'Events & conference space' },
-  { icon: Trees,     label: 'Nature Trails',        desc: '3 km curated walk' },
-  { icon: Navigation,label: 'Tracking',             desc: 'Guided nature tracking' },
+  { icon: Flame,     label: 'Fire Camp',            desc: 'Starlit bonfire evenings with music & stories',       img: '/gallery-bonfire.jpg',        link: '/resort-activities'  },
+  { icon: Baby,      label: "Children's Play Area", desc: 'Safe, secure & fun-filled zone for kids',             img: '/gallery-kids-play.jpg',      link: '/resort-activities'  },
+  { icon: Car,       label: 'Jeep Safari',          desc: 'Guided off-road adventure through scenic landscapes', img: '/place-ladys-seat.jpg',       link: '/resort-activities'  },
+  { icon: Wifi,      label: 'High-Speed WiFi',      desc: 'Stay connected with high-speed internet',             img: '/gallery-room-1.jpg',         link: '/amenities'          },
+  { icon: Utensils,  label: 'Restaurant',           desc: 'Multi-cuisine dining & room service',                 img: '/gallery-dining-1.jpg',       link: '/amenities'          },
+  { icon: Building2, label: 'Meeting Hall',         desc: 'Perfect space for events, meetings & celebrations',  img: '/gallery-meeting-hall.jpg',   link: '/facilities'         },
+  { icon: Trees,     label: 'Nature Trails',        desc: '3 km curated walk surrounded by nature',             img: '/place-botanical-garden.jpg', link: '/places-to-visit'    },
+  { icon: Navigation,label: 'Trekking',             desc: 'Guided nature trekking for adventure lovers',        img: '/place-killiyur-falls.jpg',   link: '/resort-activities'  },
 ]
 
 // ---- FALLBACK DATA ----
@@ -889,27 +889,79 @@ export default function HomePage() {
       <RoomCarousel items={ROOMS} />
 
       {/* ===== AMENITIES ===== */}
-      <section className="py-24 bg-white">
+      <section className="py-24" style={{ background: '#faf6ee' }}>
         <div className="max-w-7xl mx-auto px-6">
-          <SectionHeader label="Facilities" title="World-Class Amenities" />
+
+          {/* Section header — matching screenshot style */}
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#c9a84c" strokeWidth="1.2">
+                <path d="M12 2C10 5 7 6 4 6c0 4 2 7 8 10 6-3 8-6 8-10-3 0-6-1-8-4z"/>
+                <path d="M12 6v10M8 9c1 1 2.5 2 4 3M16 9c-1 1-2.5 2-4 3"/>
+              </svg>
+              <p className="font-sans text-gold-500 uppercase" style={{ fontSize: 11, letterSpacing: '0.28em', fontWeight: 400 }}>
+                Resort Features &amp; Experiences
+              </p>
+              <div style={{ width: 48, height: 1, background: '#c9a84c', opacity: 0.5 }} />
+            </div>
+            <h2 className="font-serif text-navy-900 mb-4" style={{ fontSize: 'clamp(2rem,4vw,2.8rem)', fontWeight: 700, letterSpacing: '0.01em' }}>
+              Thoughtfully Curated Experiences
+            </h2>
+            <p className="text-gray-500 max-w-xl mx-auto leading-relaxed mb-6" style={{ fontSize: 14 }}>
+              Premium amenities and activities designed for your comfort, adventure and unforgettable memories.
+            </p>
+            <div className="flex items-center justify-center gap-3 text-gold-400">
+              <div style={{ width: 40, height: 1, background: 'currentColor', opacity: 0.5 }} />
+              <span style={{ fontSize: 9 }}>◆</span>
+              <div style={{ width: 40, height: 1, background: 'currentColor', opacity: 0.5 }} />
+            </div>
+          </div>
+
+          {/* Cards grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-            {amenities.map(({ icon: Icon, label, desc }, idx) => (
+            {amenities.map(({ icon: Icon, label, desc, img, link }, idx) => (
               <motion.div
                 key={label}
                 initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.07, duration: 0.5 }}
-                whileHover={{ y: -6, boxShadow: '0 16px 40px rgba(27,43,107,0.11)' }}
-                className="bg-white rounded-xl border border-cream-200 p-4 md:p-8 text-center cursor-default"
-                style={{ boxShadow: '0 2px 8px rgba(27,43,107,0.06)' }}
+                className="bg-white rounded-2xl overflow-hidden group"
+                style={{ boxShadow: '0 2px 12px rgba(27,43,107,0.08)' }}
               >
-                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5"
-                  style={{ background: '#f5ede0' }}>
-                  <Icon size={24} className="text-navy-700" />
+                {/* Image with overlapping icon badge */}
+                <div className="relative overflow-hidden" style={{ height: 160 }}>
+                  <img
+                    src={img}
+                    alt={label}
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  {/* Circular icon badge */}
+                  <div
+                    className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center justify-center rounded-full bg-white z-10"
+                    style={{ width: 52, height: 52, boxShadow: '0 2px 10px rgba(0,0,0,0.12)', border: '1.5px solid #f0e8d8' }}
+                  >
+                    <Icon size={22} style={{ color: '#c9a84c' }} />
+                  </div>
                 </div>
-                <h3 className="font-serif text-navy-700 mb-2" style={{ fontSize: '1rem', fontWeight: 500 }}>{label}</h3>
-                <p className="font-sans font-light text-gray-400" style={{ fontSize: '12px', lineHeight: 1.6 }}>{desc}</p>
+
+                {/* Card content */}
+                <div className="pt-9 px-4 pb-5 text-center">
+                  <h3 className="font-serif text-navy-800 mb-2" style={{ fontSize: '1.05rem', fontWeight: 600 }}>
+                    {label}
+                  </h3>
+                  <p className="text-gray-500 mb-4 leading-relaxed" style={{ fontSize: '12px', lineHeight: 1.7 }}>
+                    {desc}
+                  </p>
+                  <Link
+                    to={link}
+                    className="inline-flex items-center gap-1.5 text-gold-500 hover:text-gold-400 transition-colors font-sans font-semibold uppercase"
+                    style={{ fontSize: 10, letterSpacing: '0.18em' }}
+                  >
+                    LEARN MORE <ChevronRight size={10} />
+                  </Link>
+                </div>
               </motion.div>
             ))}
           </div>
