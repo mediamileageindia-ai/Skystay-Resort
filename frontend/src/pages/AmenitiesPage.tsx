@@ -28,7 +28,7 @@ const FALLBACK_SECTIONS = [
   {
     title: 'Services',
     icon: Shield,
-    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80',
+    image: '/gallery-services.jpg',
     tagline: 'Every detail taken care of',
     items: [
       { name: '24/7 Concierge',     desc: 'Dedicated concierge team for sightseeing arrangements, taxi bookings, event planning, and local recommendations.' },
