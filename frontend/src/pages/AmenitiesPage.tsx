@@ -17,7 +17,7 @@ const FALLBACK_SECTIONS = [
   {
     title: 'Recreation',
     icon: Dumbbell,
-    image: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=800&q=80',
+    image: '/gallery-hall-2.jpg',
     tagline: 'Adventure and leisure at every turn',
     items: [
       { name: 'Meeting Hall',      desc: 'Fully equipped conference and events hall ideal for corporate meetings, family gatherings, and private celebrations.' },
