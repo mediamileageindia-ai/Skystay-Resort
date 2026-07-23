@@ -164,11 +164,8 @@ export default function Navbar() {
                 +91 90030 10567
               </a>
 
-              <a
-                href="https://wa.me/919003010567?text=Hello%20Sky%20Stay%20Resorts%2C%20I%20would%20like%20to%20book%20a%20room."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-sans font-semibold transition-all duration-300"
+              <span
+                className="font-sans font-semibold"
                 style={{
                   fontSize: '12px',
                   letterSpacing: '0.12em',
@@ -177,17 +174,9 @@ export default function Navbar() {
                   color: '#c9a84c',
                   borderRadius: '50px',
                 }}
-                onMouseEnter={e => {
-                  (e.currentTarget as HTMLElement).style.background = '#c9a84c'
-                  ;(e.currentTarget as HTMLElement).style.color = '#0b1232'
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget as HTMLElement).style.background = '#0b1232'
-                  ;(e.currentTarget as HTMLElement).style.color = '#c9a84c'
-                }}
               >
                 BOOK NOW
-              </a>
+              </span>
 
               {isAuthenticated && (
                 <div className="relative group">
@@ -270,13 +259,11 @@ export default function Navbar() {
                     <a href="tel:+919003010567" className="flex items-center gap-2 px-3 py-3 font-semibold" style={{ fontSize: '13px', color: '#0b1232' }}>
                       <Phone size={14} style={{ color: '#c9a84c' }} /> +91 90030 10567
                     </a>
-                    <a href="https://wa.me/919003010567?text=Hello%20Sky%20Stay%20Resorts%2C%20I%20would%20like%20to%20book%20a%20room."
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <span
                       className="block text-center py-3 font-semibold rounded-full"
                       style={{ fontSize: '12px', letterSpacing: '0.12em', background: '#0b1232', color: '#c9a84c' }}>
                       BOOK NOW
-                    </a>
+                    </span>
                     {isAuthenticated && (
                       <button onClick={logout} className="block w-full text-center py-3 rounded-full" style={{ fontSize: '12px', color: '#9ca3af' }}>
                         Logout
